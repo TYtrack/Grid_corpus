@@ -1,0 +1,12 @@
+﻿shupeidian 输配电
+shoudian 售电
+hedian 核电
+shuidian 水力发电
+huanbao 环保
+dianjian 电力建设
+zidonghua 自动化
+dianlan 电线电缆
+dianyuan 电源
+jianxiu 电力检修
+anfang 电力安防
+fd 风力发电
