@@ -10,3 +10,4 @@ dianyuan 电源
 jianxiu 电力检修
 anfang 电力安防
 fd 风力发电
+huodian 火力发电
