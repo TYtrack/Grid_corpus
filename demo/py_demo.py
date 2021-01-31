@@ -1,5 +1,9 @@
 #-*- coding:utf-8 -*-
 from jpype import *
+import os
+import tqdm
+
+
 
 startJVM(getDefaultJVMPath(),r"-Djava.class.path=C:\Users\DELL\AppData\Local\Programs\Python\Python36\Lib\site-packages\pyhanlp\static\hanlp-1.7.8.jar;C:\Users\DELL\AppData\Local\Programs\Python\Python36\Lib\site-packages\pyhanlp\static",
          "-Xms1g",
@@ -11,15 +15,39 @@ HanLP = JClass('com.hankcs.hanlp.HanLP')
 print(HanLP.segment('你好，欢迎在Python中调用HanLP的API'))
 print("-" * 70)
 
-print("=" * 30 + "标准分词" + "=" * 30)
-StandardTokenizer = JClass('com.hankcs.hanlp.tokenizer.StandardTokenizer')
-print(StandardTokenizer.segment('你好，欢迎在Python中调用HanLP的API'))
-print("-" * 70)
 
+def fileReader(path):
+    line = []
+    rows = 0
+    file_list = os.listdir(path)
+    for filename in tqdm.tqdm(file_list):
+        try :
+            with open(os.path.join(path,filename), 'r', encoding='utf-8') as f:
+                paras = f.readlines()
+                rows += len(paras)
+                line += paras
+        except FileNotFoundError:
+            print("false")
+    print("总共读 ", rows, " 行")
+    return "".join(line)
+    pass
+
+
+HanLP.Config.ShowTermNature = False
 # NLP分词NLPTokenizer会执行全部命名实体识别和词性标注
 print("=" * 30 + "NLP分词" + "=" * 30)
 NLPTokenizer = JClass('com.hankcs.hanlp.tokenizer.NLPTokenizer')
-print(NLPTokenizer.segment('中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程'))
+s=fileReader("../语料库2/火力发电/temp")
+print(s)
+sz=NLPTokenizer.segment(s)
+print(sz)
+with open("fenci_res.txt","w",encoding="UTF-8") as file_x:
+    for item in sz:
+        file_x.write(str(item)+" / ")
+
+
+
+
 print("-" * 70)
 
 print("=" * 30 + "索引分词" + "=" * 30)
@@ -62,7 +90,14 @@ document = "水利部水资源司司长陈明忠9月29日在国务院新闻办�
            "有部分省超过红线的指标。对一些超过红线的地方，陈明忠表示，对一些取用水项目进行区域的限批，" \
            "严格地进行水资源论证和取水许可的批准。"
 print("=" * 30 + "关键词提取" + "=" * 30)
-print(HanLP.extractKeyword(document, 8))
+
+s=fileReader("../语料库2/火力发电/教育")
+
+sz=HanLP.extractKeyword(s, 100)
+with open("keyword_res.txt","w",encoding="UTF-8") as file_x:
+    for item in sz:
+        file_x.write(str(item)+" / ")
+
 print("-" * 70)
 
 print("=" * 30 + "自动摘要" + "=" * 30)
